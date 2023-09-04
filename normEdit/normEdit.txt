@@ -15,6 +15,21 @@ get_current_time() {
   echo "$current_time"
 }
 
+# Função para retornar a branch como "main" ou "master"
+get_main_or_master_branch() {
+  local branch_name
+  branch_name=$(git symbolic-ref --short HEAD 2>/dev/null)
+
+  if [[ "$branch_name" == "master" ]]; then
+    echo "master"
+  elif [[ "$branch_name" == "main" ]]; then
+    echo "main"
+  else
+    echo "other"
+  fi
+}
+
+
 # Função para verificar o estado do repositório Git
 git_prompt_info() {
   local branch_name
@@ -51,7 +66,7 @@ current_directory() {
 }
 
 # Define o prompt principal com informações básicas
-PROMPT='%{$fg[blue]%}%B✘ %{$fg[yellow]Mxt@DEV:%{$fg[green]%}($(current_directory)%{$fg[green]%})%{$fg[yellow]%} λ$(if is_git_root_directory; then echo " %{$fg[blue]%}git:%{$fg[red]%}master%{$fg[blue]%}[$(git_prompt_info)%{$fg[blue]%}]";fi) %{$fg[green]%}▌%{$fg[blue]%}$(get_current_time)H %{$fg[red]%}● %{$fg[blue]%}$(get_current_date)%{$fg[green]%}▐%{$reset_color%}%B'$'\n%{$fg[green]%}↳ '
+PROMPT='%{$fg[blue]%}%B✘ %{$fg[yellow]Mxt@DEV:%{$fg[green]%}($(current_directory)%{$fg[green]%})%{$fg[yellow]%} λ$(if is_git_root_directory; then echo " %{$fg[blue]%}git:%{$fg[red]%}$(get_main_or_master_branch)%{$fg[blue]%}[$(git_prompt_info)%{$fg[blue]%}]";fi) %{$fg[green]%}▌%{$fg[blue]%}$(get_current_time)H %{$fg[red]%}● %{$fg[blue]%}$(get_current_date)%{$fg[green]%}▐%{$reset_color%}%B'$'\n%{$fg[green]%}↳ '
 
 # Configurações do prompt do Git e Mercurial
 ZSH_THEME_GIT_PROMPT_PREFIX="λ %{$fg[blue]%}git:%{$fg[red]%}"
