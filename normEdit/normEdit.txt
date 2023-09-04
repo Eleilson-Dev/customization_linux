@@ -1,0 +1,60 @@
+# Função para obter a data atual no formato desejado
+get_current_date() {
+  local current_date
+  current_date=$(LC_TIME=en_US.UTF-8 date +'%A/%B/%Y')  # Get the date in the format Day/Month/Year with English output
+
+  echo "$current_date"
+}
+
+
+# Função para obter a hora atual no formato desejado
+get_current_time() {
+  local current_time
+  current_time=$(date +'%I:%M%p')    # Obtém a hora no formato HH:MM
+
+  echo "$current_time"
+}
+
+# Função para verificar o estado do repositório Git
+git_prompt_info() {
+  local branch_name
+  branch_name=$(git rev-parse --abbrev-ref HEAD 2>/dev/null)
+
+  if [[ $? -eq 0 ]]; then
+    local has_changes
+    has_changes=$(git status --porcelain)
+
+    if [[ -n "$has_changes" ]]; then
+      echo "🚀"
+    else
+      echo "⚡"
+    fi
+  fi
+}
+
+# Função para verificar se está no diretório raiz do Git (main ou master)
+is_git_root_directory() {
+  git rev-parse --is-inside-work-tree &>/dev/null
+}
+
+is_home_directory() {
+  [[ "$PWD" == "$HOME" ]]
+}
+
+# Função para exibir o nome do diretório atual ou ícone do diretório raiz
+current_directory() {
+  if is_home_directory; then
+    echo "📁"
+  else
+    echo "%c📂"
+  fi
+}
+
+# Define o prompt principal com informações básicas
+PROMPT='%{$fg[blue]%}%B✘ %{$fg[yellow]Mxt@DEV:%{$fg[green]%}($(current_directory)%{$fg[green]%})%{$fg[yellow]%} λ$(if is_git_root_directory; then echo " %{$fg[blue]%}git:%{$fg[red]%}master%{$fg[blue]%}[$(git_prompt_info)%{$fg[blue]%}]";fi) %{$fg[green]%}▌%{$fg[blue]%}$(get_current_time)H %{$fg[red]%}● %{$fg[blue]%}$(get_current_date)%{$fg[green]%}▐%{$reset_color%}%B'$'\n%{$fg[green]%}↳ '
+
+# Configurações do prompt do Git e Mercurial
+ZSH_THEME_GIT_PROMPT_PREFIX="λ %{$fg[blue]%}git:%{$fg[red]%}"
+ZSH_THEME_GIT_PROMPT_SUFFIX="%{$fg[yellow]%}→ %{$reset_color%}"
+ZSH_THEME_HG_PROMPT_PREFIX="λ %{$fg[blue]%}hg %{$fg[red]%}"
+ZSH_THEME_HG_PROMPT_SUFFIX="%{$fg[yellow]%} → %{$reset_color%}"
