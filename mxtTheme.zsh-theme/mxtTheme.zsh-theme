@@ -9,15 +9,10 @@ get_current_time() {
 }
 
 # Função para retornar a branch como "main" ou "master"
-get_main_or_master_branch() {
+get_current_branch() {
   local branch_name
   branch_name=$(git symbolic-ref --short HEAD 2>/dev/null)
-
-  if [[ "$branch_name" == "master" || "$branch_name" == "main" ]]; then
-    echo "$branch_name"
-  else
-    echo "other"
-  fi
+  echo "$branch_name"
 }
 
 # Função para verificar o estado do repositório Git
@@ -62,4 +57,4 @@ ZSH_THEME_HG_PROMPT_PREFIX="λ %F{#c661f5}hg %F{#ff145e}"
 ZSH_THEME_HG_PROMPT_SUFFIX="%F{#efff14} → %{$reset_color%}"
 
 # Define o prompt principal com informações básicas
-PROMPT='%F{#c661f5}%B✘ %F{#efff14}Mxt@DEV:%F{#14ff43}($(current_directory)%F{#14ff43})%F{#ff145e} ~$(if is_git_root_directory; then echo " %F{#70caf0}git:%F{#ff145e}$(get_main_or_master_branch)%F{#c661f5}[$(git_prompt_info)%F{#c661f5}]";fi) %F{#14ff43}▌%F{#c661f5}$(get_current_time) %F{#ff145e}♦ %F{#c661f5}$(get_current_date)%F{#14ff43}▐%{$reset_color%}%B'$'\n%F{#14ff43}↳%F{#fffffff} '
+PROMPT='%F{#c661f5}%B✘ %F{#efff14}Mxt@DEV:%F{#14ff43}($(current_directory)%F{#14ff43})%F{#ff145e} ~$(if is_git_root_directory; then echo " %F{#70caf0}git:%F{#ff145e}$(get_current_branch)%F{#c661f5}[$(git_prompt_info)%F{#c661f5}]";fi) %F{#14ff43}▌%F{#c661f5}$(get_current_time) %F{#ff145e}♦ %F{#c661f5}$(get_current_date)%F{#14ff43}▐%{$reset_color%}%B'$'\n%F{#14ff43}↳%F{#fffffff} '
