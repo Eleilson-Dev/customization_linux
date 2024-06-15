@@ -27,7 +27,7 @@ git_prompt_info() {
     if [[ -n "$has_changes" ]]; then
       echo "🚀"
     else
-      echo "⚡"
+      echo "⚡️"
     fi
   fi
 }
