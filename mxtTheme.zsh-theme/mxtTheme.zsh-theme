@@ -1,4 +1,18 @@
-# Função para obter a data atual no formato desejado
+# Função para detectar e exibir o ambiente virtual manualmente
+export VIRTUAL_ENV_DISABLE_PROMPT=1
+
+detect_virtual_env() {
+  if [[ -n "$VIRTUAL_ENV" ]]; then
+    # Extraia o nome do ambiente virtual
+    venv_name=$(basename "$VIRTUAL_ENV")
+        
+    # Retorne o formato desejado para o prompt
+    echo "%B%F{#c661f5}[%F{#ff145e}$venv_name🧩%F{#c661f5}]%F{#efff14}:%F{#14ff43}Py "
+  else
+    echo ""
+  fi
+}
+
 get_current_date() {
   LC_TIME=en_US.UTF-8 date +'%A/%B/%Y'
 }
@@ -27,7 +41,7 @@ git_prompt_info() {
     if [[ -n "$has_changes" ]]; then
       echo "🚀"
     else
-      echo "⚡️"
+      echo "✅"
     fi
   fi
 }
@@ -57,4 +71,5 @@ ZSH_THEME_HG_PROMPT_PREFIX="λ %F{#c661f5}hg %F{#ff145e}"
 ZSH_THEME_HG_PROMPT_SUFFIX="%F{#efff14} → %{$reset_color%}"
 
 # Define o prompt principal com informações básicas
-PROMPT='%F{#c661f5}%B✘ %F{#efff14}Mxt@DEV:%F{#14ff43}($(current_directory)%F{#14ff43})%F{#ff145e} ~$(if is_git_root_directory; then echo " %F{#70caf0}git:%F{#ff145e}$(get_current_branch)%F{#c661f5}[$(git_prompt_info)%F{#c661f5}]";fi) %F{#14ff43}▌%F{#c661f5}$(get_current_time) %F{#ff145e}♦ %F{#c661f5}$(get_current_date)%F{#14ff43}▐%{$reset_color%}%B'$'\n%F{#14ff43}↳%F{#fffffff} '
+PROMPT='$(detect_virtual_env)%F{#c661f5}%B✘ %F{#efff14}Mxt@DEV:%F{#14ff43}($(current_directory)%F{#14ff43})%F{#ff145e} ~$(if is_git_root_directory; then echo " %F{#70caf0}git:%F{#ff145e}$(get_current_branch)%F{#c661f5}($(git_prompt_info)%F{#c661f5})";fi) %F{#14ff43}▌%F{#c661f5}$(get_current_time) %F{#ff145e}♦ %F{#c661f5}$(get_current_date)%F{#14ff43}▐%{$reset_color%}%B'$'\n%F{#14ff43}↳%F{#fffffff} '
+
